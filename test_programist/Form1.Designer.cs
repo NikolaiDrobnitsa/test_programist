@@ -51,16 +51,15 @@ namespace test_programist
             this.answer_btn.Text = "Следющий вопрос";
             this.answer_btn.Click += Answer_btn_Click;
             //this.answer_btn
-            this.Controls.Add(answer_btn);
 
             
 
-            this.start_game.Location = new Point(200, 200);
-            this.start_game.Size = new Size(100, 100);
-            this.start_game.Font = new Font("Times New Romans", 11, FontStyle.Regular, GraphicsUnit.Point);
-            this.start_game.Text = "Начать тест";
-            this.start_game.Click += Answer_btn_Click;
-            this.Controls.Add(start_game);
+            this.start_test.Location = new Point(200, 200);
+            this.start_test.Size = new Size(100, 100);
+            this.start_test.Font = new Font("Times New Romans", 11, FontStyle.Regular, GraphicsUnit.Point);
+            this.start_test.Text = "Начать тест";
+            this.start_test.Click += Start_test_Click;
+            this.Controls.Add(start_test);
 
 
             this.test_text.Location = new Point(100, 359);
@@ -84,7 +83,7 @@ namespace test_programist
             this.img_test_1.Location = new Point(45, 20);
             this.img_test_1.Size = new Size(700, 303);
             this.img_test_1.SizeMode = PictureBoxSizeMode.Zoom;
-            this.Controls.Add(img_test_1);
+            
 
             
 
@@ -102,33 +101,32 @@ namespace test_programist
             this.radio_1.Font = new Font("Times New Romans", 13, FontStyle.Regular, GraphicsUnit.Point);
             this.radio_1.Location = new Point(100, 430);
             //this.radio_1.Click += Radio_1_Click;
-            this.Controls.Add(radio_1);
+
 
             this.radio_2.Size = new Size(500, 50);
             this.radio_2.Font = new Font("Times New Romans", 13, FontStyle.Regular, GraphicsUnit.Point);
             this.radio_2.Location = new Point(100, 500);
-            this.Controls.Add(radio_2);
 
             this.radio_3.Size = new Size(500, 50);
             this.radio_3.Font = new Font("Times New Romans", 13, FontStyle.Regular, GraphicsUnit.Point);
             this.radio_3.Location = new Point(100, 570);
-            this.Controls.Add(radio_3);
 
             this.radio_4.Size = new Size(500, 50);
             this.radio_4.Font = new Font("Times New Romans", 13, FontStyle.Regular, GraphicsUnit.Point);
             this.radio_4.Location = new Point(100, 640);
-            this.Controls.Add(radio_4);
 
 
         }
+
         
+
         int check_answer_checkbox()
         {
             if (next_btn == 11)
             {
                 if (test_3.Checked == true)
                 {
-                        num++;
+                     num++;
                 }
                 if (test_7.Checked == true)
                 {
@@ -162,11 +160,43 @@ namespace test_programist
                 {
                     num++;
                 }
-
+                next_btn++;
             }
+            
             return num;
         }
-       void checkbox()
+        void end_test()
+        {
+            this.Controls.Remove(answer_btn);
+            this.end_test_button.Location = new Point(650, 700);
+            this.end_test_button.Size = new Size(100, 50);
+            this.end_test_button.Font = new Font("Times New Romans", 11, FontStyle.Regular, GraphicsUnit.Point);
+            this.end_test_button.Text = "Закончить тест";
+            this.end_test_button.Click += End_test_button_Click;
+            this.Controls.Add(end_test_button);
+        }
+
+        private void End_test_button_Click(object sender, EventArgs e)
+        {
+            if (num >= 0 || num <=3)
+            {
+                string message = string.Format("Вы набрали :{0} очков\n Ваше время {1}\n\n\tХотите ещё раз?",num,next_btn);
+                string caption = "End";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+                else
+                {
+                    Application.ExitThread();
+                }
+            }
+        }
+
+        void checkbox()
         {
             this.Controls.Remove(radio_1);
             this.Controls.Remove(radio_2);
@@ -352,27 +382,32 @@ namespace test_programist
             this.test_8.Text = "HTML";
             this.img_test_1.Image = Image.FromFile("test_12.jpg");
         }
-
+        private void Start_test_Click(object sender, EventArgs e)
+        {
+            this.Controls.Remove(start_test);
+            this.Controls.Add(radio_1);
+            this.Controls.Add(radio_2);
+            this.Controls.Add(radio_3);
+            this.Controls.Add(radio_4);
+            this.Controls.Add(answer_btn);
+            this.Controls.Add(img_test_1);
+            first_test();
+        }
         private void Answer_btn_Click(object sender, EventArgs e)
         {
 
-            
-            if (next_btn == 0)
-            {
-                next_btn++;
-                this.Controls.Remove(start_game);
-            }
-            this.check_next.Text = next_btn.ToString();
-            this.check.Text = num.ToString();
-            this.progressBar.Value = next_btn;
             switch (next_btn)
             {
                 case 0:
-                    first_test();
+                    if (checks == true)
+                    {
+                        goto case 1;
+                    }
                     break;
                 case 1:
                     check_answer();
                     second_test();
+                    next_btn++;
                     break;
                 case 2:
                     check_answer();
@@ -413,7 +448,6 @@ namespace test_programist
                 case 10:
                     check_answer();
                     eleventh_test();
-                    next_btn++;
                     break;
                 case 11:
                     check_answer_checkbox();
@@ -424,25 +458,31 @@ namespace test_programist
                     MessageBox.Show("the end");
                     break;
             }
-            if (next_btn == 1)
-            {
-                check_answer();
-            }
-            
 
+            this.check_next.Text = next_btn.ToString();
+            this.check.Text = num.ToString();
+            
+            this.progressBar.Value = next_btn;
+            checks = true;
+            if (next_btn == 11)
+            {
+                end_test();
+            }
         }
         int check_answer()
         {
-            if (next_btn == 1)
+            
+            if (next_btn == 0)
             {
                 if (radio_2.Checked == true)
                 {
                     num++;
+                    
                 }
             }
-            if (next_btn == 4)
+            if (next_btn == 1)
             {
-                if (radio_1.Checked == true)
+                if (radio_2.Checked == true)
                 {
                     num++;
                 }
@@ -456,14 +496,22 @@ namespace test_programist
             }
             if (next_btn == 3)
             {
-                if (radio_2.Checked == true)
+                if (radio_1.Checked == true)
                 {
                     num++;
                 }
             }
-            if (next_btn == 9)
+            if (next_btn == 4)
             {
-                if (radio_2.Checked == true)
+                if (radio_4.Checked == true)
+                {
+                    num++;
+                }
+
+            }
+            if (next_btn == 5)
+            {
+                if (radio_3.Checked == true)
                 {
                     num++;
                 }
@@ -484,35 +532,22 @@ namespace test_programist
             }
             if (next_btn == 8)
             {
+                if (radio_2.Checked == true)
+                {
+                    num++;
+                }
+            }
+            if (next_btn == 9)
+            {
                 if (radio_3.Checked == true)
                 {
                     num++;
                 }
-            }
-            if (radio_3.Checked == true)
-            {
-                if (next_btn == 10)
-                {
-                    num++;
-                }
-
-            }
-
-            if (next_btn == 5)
-            {
-                if (radio_4.Checked == true)
-                {
-                    num++;
-                }
-
-            }
-            if (num >= 1)
-            {
-                next_btn++;
+                
             }
             
-            
-            
+            next_btn++;
+
             return num;
         }
 
@@ -521,7 +556,8 @@ namespace test_programist
         Label check = new Label();
         Label check_next = new Label();
         Button answer_btn = new Button();
-        Button start_game = new Button();
+        Button start_test = new Button();
+        Button end_test_button = new Button();
         RadioButton radio_1 = new RadioButton();
         RadioButton radio_2 = new RadioButton();
         RadioButton radio_3 = new RadioButton();
@@ -537,6 +573,7 @@ namespace test_programist
         PictureBox img_test_1 = new PictureBox();
         static int num = 0;
         static int next_btn = 0;
+        bool checks = false;
         ProgressBar progressBar = new ProgressBar();
         #endregion
 
