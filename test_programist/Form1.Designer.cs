@@ -46,16 +46,17 @@ namespace test_programist
 
             this.answer_btn.Location = new Point(650, 700);
             this.answer_btn.Size = new Size(100, 50);
-            //this.answer_btn.BackColor = Color.Black;
+            this.answer_btn.BackColor = Color.Transparent;
             this.answer_btn.Font = new Font("Times New Romans", 11, FontStyle.Regular, GraphicsUnit.Point);
-            this.answer_btn.Text = "Следющий вопрос";
+            this.answer_btn.Text = "Следующий вопрос";
             this.answer_btn.Click += Answer_btn_Click;
             //this.answer_btn
 
-            
 
-            this.start_test.Location = new Point(200, 200);
+
+            this.start_test.Location = new Point(350, 320);
             this.start_test.Size = new Size(100, 100);
+            this.start_test.BackColor = Color.Azure;
             this.start_test.Font = new Font("Times New Romans", 11, FontStyle.Regular, GraphicsUnit.Point);
             this.start_test.Text = "Начать тест";
             this.start_test.Click += Start_test_Click;
@@ -67,16 +68,14 @@ namespace test_programist
             this.test_text.Font = new Font("Times New Romans", 16, FontStyle.Regular, GraphicsUnit.Point);
             this.Controls.Add(test_text);
 
-            this.check.Location = new Point(10, 10);
-            this.check.Size = new Size(70, 70);
-            this.check.Font = new Font("Times New Romans", 16, FontStyle.Regular, GraphicsUnit.Point);
-            this.Controls.Add(check);
+            this.check.Location = new Point(350, 330);
+            this.check.Size = new Size(70, 50);
+            this.check.Font = new Font("Times New Romans", 15, FontStyle.Regular, GraphicsUnit.Point);
+            this.check.BackColor = Color.WhiteSmoke;
+            this.check.TextAlign = ContentAlignment.TopCenter;
+            
+            
 
-            this.check_next.Location = new Point(100, 50);
-            this.check_next.Size = new Size(70, 70);
-            this.check_next.BackColor = Color.White;
-            this.check_next.Font = new Font("Times New Romans", 16, FontStyle.Regular, GraphicsUnit.Point);
-            this.Controls.Add(check_next);
 
 
             this.img_test_1.Image = Image.FromFile("tets_1.jpg");
@@ -88,13 +87,12 @@ namespace test_programist
             
 
             this.progressBar.Style = ProgressBarStyle.Continuous;
-            this.progressBar.Maximum = 11;
-            this.progressBar.Minimum = 0;
+            this.progressBar.Maximum = 12;
+            this.progressBar.Minimum = 1;
             this.progressBar.Location = new Point(45,330);
             this.progressBar.Size = new Size(700, 29);
             this.progressBar.Step = 1;
             //progressBar.Increment(10);
-            this.Controls.Add(progressBar);
 
 
             this.radio_1.Size = new Size(500, 50);
@@ -114,8 +112,7 @@ namespace test_programist
             this.radio_4.Size = new Size(500, 50);
             this.radio_4.Font = new Font("Times New Romans", 13, FontStyle.Regular, GraphicsUnit.Point);
             this.radio_4.Location = new Point(100, 640);
-
-
+            this.timer.Tick += Timer_Tick;
         }
 
         
@@ -167,6 +164,8 @@ namespace test_programist
         }
         void end_test()
         {
+            
+            next_btn++;
             this.Controls.Remove(answer_btn);
             this.end_test_button.Location = new Point(650, 700);
             this.end_test_button.Size = new Size(100, 50);
@@ -178,9 +177,10 @@ namespace test_programist
 
         private void End_test_button_Click(object sender, EventArgs e)
         {
-            if (num >= 0 || num <=3)
+            this.timer.Stop();
+            if (num >= 0 || num <=4)
             {
-                string message = string.Format("Вы набрали :{0} очков\n Ваше время {1}\n\n\tХотите ещё раз?",num,next_btn);
+                string message = string.Format("Вы набрали :{0} очка\n Ваше время: {1}\nВы на верном пути. Вам стоит попробовать — и у вас может получиться\n\n\t\t\tХотите ещё раз?", num,time.ToString());
                 string caption = "End";
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
                 DialogResult result;
@@ -194,6 +194,48 @@ namespace test_programist
                     Application.ExitThread();
                 }
             }
+            if (num >= 5 || num <= 10)
+            {
+                string message = string.Format("Вы набрали :{0} очка\n Ваше время: {1}\nУ вас хорошо выходит но стоит повторить ещё\n\n\t\t\tХотите ещё раз?", num, time.ToString());
+                string caption = "End";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+                else
+                {
+                    Application.ExitThread();
+                }
+            }
+            if (num >= 11 || num <= 15)
+            {
+                string message = string.Format("Вы набрали :{0} очка\n Ваше время: {1}\nИнформатику вы знатее хорошо)\n\n\t\t\tХотите ещё раз?", num, time.ToString());
+                string caption = "End";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+                else
+                {
+                    Application.ExitThread();
+                }
+            }
+            if (num >= 16 || num <= 18)
+            {
+                string message = string.Format("Вы набрали :{0} очка\n Ваше время: {1}\nЭто успех! Или вы уже занимаетесь программированием?\n\n\t\t\tХотите ещё раз?", num, time.ToString());
+                string caption = "End";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                
+            }
+
         }
 
         void checkbox()
@@ -385,88 +427,101 @@ namespace test_programist
         private void Start_test_Click(object sender, EventArgs e)
         {
             this.Controls.Remove(start_test);
+            this.Controls.Add(check);
             this.Controls.Add(radio_1);
             this.Controls.Add(radio_2);
             this.Controls.Add(radio_3);
             this.Controls.Add(radio_4);
             this.Controls.Add(answer_btn);
             this.Controls.Add(img_test_1);
+            this.Controls.Add(progressBar);
+            this.check.Text = "1/12";
             first_test();
+            this.timer.Start();
+            
+            
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            time++;
         }
         private void Answer_btn_Click(object sender, EventArgs e)
         {
 
-            switch (next_btn)
+            if (radio_1.Checked ||radio_2.Checked ||radio_3.Checked || radio_4.Checked)
             {
-                case 0:
-                    if (checks == true)
-                    {
-                        goto case 1;
-                    }
-                    break;
-                case 1:
-                    check_answer();
-                    second_test();
+
+
+                if (next_btn == 0)
+                {
                     next_btn++;
-                    break;
-                case 2:
-                    check_answer();
-                    third_test();
-                    break;
-                case 3:
-                    check_answer();
-                    fourth_test();
-                    break;
-                case 4:
-                    check_answer();
-                    fifth_test();
-                    break;
-                case 5:
-                    check_answer();
-                    sixth_test();
-                    break;
-                case 6:
-                    check_answer();
-                    seventh_test();
+                }
+                this.check.Text = string.Format((next_btn + 1) + ("/12"));
 
-                    break;
-                case 7:
-                    check_answer();
-                    eighth_test();
+                switch (next_btn)
+                {
+                    case 1:
+                        check_answer();
+                        second_test();
+                        break;
+                    case 2:
+                        check_answer();
+                        third_test();
+                        break;
+                    case 3:
+                        check_answer();
+                        fourth_test();
+                        break;
+                    case 4:
+                        check_answer();
+                        fifth_test();
+                        break;
+                    case 5:
+                        check_answer();
+                        sixth_test();
+                        break;
+                    case 6:
+                        check_answer();
+                        seventh_test();
 
-                    break;
-                case 8:
-                    check_answer();
-                    ninth_test();
+                        break;
+                    case 7:
+                        check_answer();
+                        eighth_test();
 
-                    break;
-                case 9:
-                    check_answer();
-                    tenth_test();
+                        break;
+                    case 8:
+                        check_answer();
+                        ninth_test();
 
-                    break;
-                case 10:
-                    check_answer();
-                    eleventh_test();
-                    break;
-                case 11:
-                    check_answer_checkbox();
-                    twelfth_test();
-                    check_answer_checkbox();
-                    break;
-                default:
-                    MessageBox.Show("the end");
-                    break;
+                        break;
+                    case 9:
+                        check_answer();
+                        tenth_test();
+
+                        break;
+                    case 10:
+
+                        check_answer();
+                        eleventh_test();
+                        break;
+                    case 11:
+                        check_answer_checkbox();
+                        twelfth_test();
+                        end_test();
+                        break;
+                    default:
+                        MessageBox.Show("the end");
+                        break;
+                }
+
+
+
+                this.progressBar.Value = next_btn;
             }
-
-            this.check_next.Text = next_btn.ToString();
-            this.check.Text = num.ToString();
-            
-            this.progressBar.Value = next_btn;
-            checks = true;
-            if (next_btn == 11)
+            else
             {
-                end_test();
+                MessageBox.Show("Вырерите хотя бы 1 значение");
             }
         }
         int check_answer()
@@ -554,7 +609,6 @@ namespace test_programist
 
         Label test_text = new Label();
         Label check = new Label();
-        Label check_next = new Label();
         Button answer_btn = new Button();
         Button start_test = new Button();
         Button end_test_button = new Button();
@@ -570,10 +624,11 @@ namespace test_programist
         CheckBox test_6 = new CheckBox();
         CheckBox test_7 = new CheckBox();
         CheckBox test_8 = new CheckBox();
+        Timer timer = new Timer();
         PictureBox img_test_1 = new PictureBox();
         static int num = 0;
         static int next_btn = 0;
-        bool checks = false;
+        int time;
         ProgressBar progressBar = new ProgressBar();
         #endregion
 
